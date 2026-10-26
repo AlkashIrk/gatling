@@ -110,9 +110,13 @@ private[gatling] object ConsoleSummary {
     writeDetailedRequestsCounter(sb).append(Eol)
     writeErrors(sb).append(Eol)
 
-    usersCounters.foreachEntry { (scenarioName, usersStats) =>
-      writeUsersCounters(sb, scenarioName, usersStats).append(Eol)
-    }
+    usersCounters.toSeq
+      .sortBy { case (scenarioName, _) =>
+        scenarioName
+      }
+      .foreach { case (scenarioName, usersStats) =>
+        writeUsersCounters(sb, scenarioName, usersStats).append(Eol)
+      }
 
     sb.append(NewBlock).append(Eol)
 
